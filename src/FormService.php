@@ -824,6 +824,24 @@ class FormService
         return $this->_set('wrapperAttrs', $attrs);
     }
 
+     /**
+     * @param string $value
+     * @return FormService
+     */
+    public function append($value)
+    {
+        return $this->_set('append', $value);
+    }
+
+    /**
+     * @param string $value
+     * @return FormService
+     */
+    public function prepend($value)
+    {
+        return $this->_set('prepend', $value);
+    }
+    
     /**
      * Create radio or checkbox input
      *

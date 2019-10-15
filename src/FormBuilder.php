@@ -133,9 +133,27 @@ class FormBuilder
 
     private function renderInput(): string
     {
+        extract($this->get('append', 'prepend'));
         $attributes = $this->getInputAttributes();
         $attrs = $this->buildHtmlAttrs($attributes);
-        return $this->wrapperInput('<input ' . $attrs . '>');
+
+        if ($prepend || $append) {
+            $inputField = '<div class="input-group">';
+
+            if ($prepend)
+                $inputField .= '<div class="input-group-prepend"><span class="input-group-text">' . $prepend . '</span></div>';
+
+            $inputField .= '<input ' . $attrs . '>';
+
+            if ($append)
+                $inputField .= '<div class="input-group-append"><span class="input-group-text">' . $append . '</span></div>';
+
+            $inputField .= '</div>';
+        } else {
+            $inputField = '<input ' . $attrs . '>';
+        }
+
+        return $this->wrapperInput($inputField);
     }
 
     private function renderSelect(): string
