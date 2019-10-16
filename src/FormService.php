@@ -841,7 +841,17 @@ class FormService
     {
         return $this->_set('prepend', $value);
     }
-    
+
+    /**
+     * Get a value from formData 
+     * 
+     * @param string $field
+     * @return string
+     */
+    public function getValue(string $field) : string {
+        return $this->_builder->attrs['formData'][$field]?? '';
+    }    
+
     /**
      * Create radio or checkbox input
      *
