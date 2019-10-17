@@ -158,11 +158,15 @@ class FormBuilder
 
     private function renderSelect(): string
     {
-        extract($this->get('options'));
-
+        extract($this->get('options', 'nullValue'));
         $fieldValue = $this->getValue();
         $arrValues = is_array($fieldValue) ? $fieldValue : [$fieldValue];
         $optionsList = '';
+
+        if ($nullValue) {
+            $options = ['' => $nullValue] + $options ;
+        }
+
         foreach ($options as $value => $label) {
             $attrs = $this->buildHtmlAttrs(['value' => $value, 'selected' => in_array($value, $arrValues)], false);
             $optionsList .= '<option ' . $attrs . '>' . $label . '</option>';
@@ -232,7 +236,7 @@ class FormBuilder
 
     private function getInputAttributes(): array
     {
-        extract($this->get('render', 'type', 'multiple', 'name', 'size', 'placeholder', 'help', 'disabled', 'readonly', 'required', 'autocomplete', 'min', 'max', 'value', 'checked', 'formData', 'disableValidation'));
+        extract($this->get('render', 'type', 'multiple', 'name', 'size', 'placeholder', 'help', 'disabled', 'readonly', 'required', 'autocomplete', 'min', 'max', 'value', 'checked', 'formData', 'disableValidation', 'extraClasses'));
 
         $isRadioOrCheckbox = $this->isRadioOrCheckbox();
         $type = $isRadioOrCheckbox ? $render : $type;
@@ -251,6 +255,10 @@ class FormBuilder
 
             if ($size) {
                 $class .= ' form-control-' . $size;
+            }
+
+            if ($extraClasses) {
+                $class .= ' ' . implode(' ', $extraClasses);
             }
         }
 
@@ -347,11 +355,11 @@ class FormBuilder
             return $input;
         }
 
-        $id             = $this->getId();
-        $label          = $this->renderLabel();
-        $helpText       = $help ? '<small id="help-' . $id . '" class="form-text text-muted">' . $this->getText($help) . '</small>' : '';
-        $error          = $this->getInputErrorMarkup($name);
-        $attrs          = $wrapperAttrs ?? [];
+        $id = $this->getId();
+        $label = $this->renderLabel();
+        $helpText = $help ? '<small id="help-' . $id . '" class="form-text text-muted">' . $this->getText($help) . '</small>' : '';
+        $error = $this->getInputErrorMarkup($name);
+        $attrs = $wrapperAttrs ?? [];
         $attrs['class'] = $this->createAttrsList(
             $attrs['class'] ?? null,
             $formInline ? 'input-group' : 'form-group'
@@ -405,7 +413,7 @@ class FormBuilder
 
     private function hasOldInput()
     {
-        return count((array) old()) != 0;
+        return count((array)old()) != 0;
     }
 
     private function getValue()

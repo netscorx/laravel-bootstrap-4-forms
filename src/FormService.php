@@ -30,7 +30,7 @@ class FormService
 
     /**
      * Set error bag name
-     * 
+     *
      * @param string $value
      * @return FormService
      */
@@ -188,7 +188,7 @@ class FormService
 
     /**
      * Set inline form style
-     * 
+     *
      * @param bool $inline
      * @return FormService
      */
@@ -344,7 +344,7 @@ class FormService
 
     /**
      * Set a minimum value for a field
-     * 
+     *
      * @param string $value
      * @return FormService
      */
@@ -355,7 +355,7 @@ class FormService
 
     /**
      * Set a maximum value for a field
-     * 
+     *
      * @param string $value
      * @return FormService
      */
@@ -393,7 +393,7 @@ class FormService
     /**
      * Set options for a select field
      *
-     * @param mixed  $options
+     * @param mixed $options
      * @param string $valueKey
      * @param string $idKey
      * @return FormService
@@ -420,7 +420,7 @@ class FormService
      * @param string $name
      * @param string $value
      * @param string $label
-     * @param bool   $checked
+     * @param bool $checked
      * @return FormService
      */
     public function checkbox(string $name = null, string $label = null, string $value = 'on', bool $checked = null): FormService
@@ -434,7 +434,7 @@ class FormService
      * @param string $name
      * @param string $value
      * @param string $label
-     * @param bool   $checked
+     * @param bool $checked
      * @return FormService
      */
     public function radio(string $name = null, string $label = null, string $value = null, bool $checked = null): FormService
@@ -824,7 +824,7 @@ class FormService
         return $this->_set('wrapperAttrs', $attrs);
     }
 
-     /**
+    /**
      * @param string $value
      * @return FormService
      */
@@ -843,14 +843,41 @@ class FormService
     }
 
     /**
-     * Get a value from formData 
-     * 
+     * Get a value from formData
+     *
      * @param string $field
      * @return string
      */
-    public function getValue(string $field) : string {
-        return $this->_builder->attrs['formData'][$field]?? '';
-    }    
+    public function getValue(string $field): string
+    {
+        return $this->_builder->attrs['formData'][$field] ?? '';
+    }
+
+    /**
+     * Add css class to input
+     *
+     * @param array $classes
+     * @return FormService
+     */
+    public function addClasses(array $classes)
+    {
+        return $this->_set('extraClasses', $classes);
+    }
+
+    /**
+     * Add empty option to select inputs
+     *
+     * @param string|null $label
+     * @return FormService
+     */
+    public function withNull(string $label = null)
+    {
+        if (!$label) {
+            $label = '- Select ' . $this->_builder->attrs['label'] . ' -';
+        }
+
+        return $this->_set('nullValue', $label);
+    }
 
     /**
      * Create radio or checkbox input
@@ -859,7 +886,7 @@ class FormService
      * @param string $name
      * @param string $value
      * @param string $label
-     * @param mixed  $checked
+     * @param mixed $checked
      * @return FormService
      */
     private function _radioOrCheckbox($render, $name, $label, $value, $checked): FormService
