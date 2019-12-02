@@ -210,8 +210,13 @@ class FormBuilder
 
     private function renderButton(): string
     {
-        extract($this->get('type', 'value', 'disabled'));
+        extract($this->get('type', 'value', 'disabled', 'extraClasses'));
         $class = $this->getBtnAnchorClasses();
+
+        if ($extraClasses) {
+            $class .= ' ' . implode(' ', $extraClasses);
+        }
+
         $attrs = $this->buildHtmlAttrs(['type' => $type, 'class' => $class, 'disabled' => $disabled]);
         return '<button ' . $attrs . '>' . $value . '</button>';
     }
